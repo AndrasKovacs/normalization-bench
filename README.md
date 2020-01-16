@@ -2,7 +2,7 @@
 
 This repo contains some benchmarks for normalizing untyped lambda calculus and
 doing beta-conversion checking on it. WIP, I plan to add more benchmarks and languages
-to this and also different implementations in particular languages.
+to this and also different implementations in particular languages. PRs are welcome.
 
 My motivation is type checking, where the more sophisticated
 type systems, such as dependent type theories, require evaluating open lambda
