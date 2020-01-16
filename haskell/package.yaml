@@ -1,0 +1,47 @@
+
+name:                normalization-bench
+version:             0.1.0.0
+# github:              ""
+license:             BSD3
+author:              "András Kovács"
+maintainer:          "puttamalac@gmail.com"
+copyright:           "2020 András Kovács"
+
+synopsis:    Normalization and conversion checking benchmarks
+category:    Language
+description: In README
+
+dependencies:
+  - base >= 4.7 && < 5
+  - ghc-prim
+  - primitive
+  - time
+
+library:
+  source-dirs:
+    - .
+  ghc-options:
+    - -Wall
+    - -Wno-missing-signatures
+    - -Wno-name-shadowing
+    - -Wno-unused-do-bind
+    - -Wno-unused-matches
+    - -Wno-partial-type-signatures
+    - -O2
+    - -fllvm
+
+executables:
+  normalization-bench:
+    main:  Main.hs
+    ghc-options:
+      - -Wall
+      - -Wno-missing-signatures
+      - -Wno-name-shadowing
+      - -Wno-unused-do-bind
+      - -Wno-unused-matches
+      - -Wno-partial-type-signatures
+      - -O2
+      - -fllvm
+      - -rtsopts
+    dependencies:
+    - normalization-bench
