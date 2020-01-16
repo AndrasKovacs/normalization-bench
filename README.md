@@ -35,7 +35,7 @@ __nodejs__:
 __F#__:
 - dotnet 3.0.101 (dotnet core)
 - F# 4.0
-- Runtime options: `su`, `ulimit -s unlimited`, running with `dotnet run -C Release`.
+- Runtime options: `su`, `ulimit -s unlimited`, running with `dotnet run -c Release`.
 
 __GHC__:
 - ghc 8.8.1
