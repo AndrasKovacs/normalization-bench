@@ -86,6 +86,7 @@ General comments.
 - Startup time in nodejs is excellent, but F# and Scala are rather sluggish. GC pause variance is way more in the non-GHC solutions, with occasional multi-second pauses in nodejs and Scala.
 - There are some stability issues in nodejs and Scala. In the former, I sometimes got runtime exceptions for 10M Nat, presumably related to too deep stacks (it was *not* stack overflow exception though, but some internal error!). In the latter, with 5M and 10M Nats, sometimes I got sudded a memory hike which  resulted in out-of-memory process termination.
 - __Call-by-need evaluation__ has only been benchmarked with GHC! CBN is critically important for type checking, and there is a good chance that CBN would make performance significantly worse elsewhere, since only GHC has native RTS support for CBN.
+- GHC uses a single core, while the JITs are typically using at least 50% of all of my cores.
 
 #### TODO
 - Add bench figures without free memory options.
