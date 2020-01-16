@@ -73,7 +73,7 @@ GHC CBV is call-by-value, GHC CBN is call-by-need, all other columns are call-by
 #### Commentary
 
 __F#__. Performance here was the most disappointing. I had hopes for F# since it is the nicest language
-of the pack by a significant margin, and I thought it would be tolerable or even superior to Haskell to
+of the JIT pack by a significant margin, and I thought it would be tolerable or even superior to Haskell to
 implement everything in F#, because of the support for high-performance non-persistent data structures, monomorphization, unpacked structures, etc. Now, there could be some GC option which magically repairs this, but I looked and tried and have not found a way to make it go faster.
 
 __Scala__. I had never used Scala before, and I found the language relatively pleasant, and definitely vastly better than Java or even Clojure. That said, performance is acceptable, but not really good. Normalization performance degrades disproportionately (apparently way worse than linear) when moving from 5M to 10M and from 4M to 8M.
