@@ -25,7 +25,7 @@ __Test computer__:
 __Scala__:
 - sbt 1.3.4
 - openjdk 1.8.0_232
-- Runtime options: `export SBT_OPTS="-Xss500M -Xmx4G"`
+- Runtime options: `export SBT_OPTS="-Xss1000M -Xmx4G"`
 
 __nodejs__:
 - node v13.6.0
