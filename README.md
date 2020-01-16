@@ -47,7 +47,7 @@ In all of the above cases, the implementations are virtually the same. All imple
 use idiomatic ADTs or a straightforward emulation of them (in the case of js) to represent lambda terms and HOAS values.
 
 The benchmarks are normalization and beta-conversion checking on Church-encoded unary natural numbers and
-binary trees. Times are in milliseconds and are averages of 20 runs.
+binary trees.
 
 I made a non-trivial amount of effort trying to tune runtime options, but I
 don't have much experience in tuning things besides GHC, so feel free to correct
@@ -55,7 +55,7 @@ me.
 
 #### Results
 
-GHC CBV is call-by-value, GHC CBN is call-by-need, all other columns are call-by-value.
+GHC CBV is call-by-value, GHC CBN is call-by-need, all other columns are call-by-value. Times are in milliseconds and are averages of 20 runs.
 
 |   | GHC CBV | GHC CBN | nodejs | Scala | F#  |
 |:--|:--------|:-------|:------|:----|:------|
