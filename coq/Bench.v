@@ -43,6 +43,19 @@ Definition t2Mb := fullTree n20b.
 Definition t4Mb := fullTree n21b.
 Definition t8Mb := fullTree n22b.
 
+Inductive ITree : Set :=
+| ileaf : ITree
+| inode : ITree → ITree → ITree.
+
+Definition normTree (t : Tree) : bool :=
+  match t ITree ileaf inode with
+  | inode _ _ => true
+  | _ => false
+  end.
+
 (* Definition t2Mconv : t2M = t2Mb := eq_refl. *)
 (* Definition t4Mconv : t4M = t4Mb := eq_refl. *)
-Definition t8Mconv : t8M = t8Mb := eq_refl.
+(* Definition t8Mconv : t8M = t8Mb := eq_refl. *)
+(* Eval compute in (normTree t2M). *)
+(* Eval compute in (normTree t4M). *)
+(* Eval compute in (normTree t8M). *)

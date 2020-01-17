@@ -47,13 +47,25 @@ __Coq__
 - coqc 8.10.2
 - `coqc -impredicative-set`.
 
-The implementations are virtually the same except in Coq, where we are using
-well-typed impredicative Church encodings. The deep HOAS implementations use
-idiomatic ADTs or a straightforward emulation of them (in the case of js) to
-represent lambda terms and HOAS values.
+#### Benchmarks & implementations
 
-The benchmarks are normalization and beta-conversion checking on Church-encoded unary natural numbers and
-binary trees.
+Benchmarks are normalization and beta-conversion checking on Church-coded unary
+numbers and binary trees.
+
+All deep HOAS implementations are virtually the same; the use idiomatic ADTs for
+terms and HOAS values, or straightforward ADT emulation in the case of javascript.
+
+In GHC, we have a call-by-need and a call-by-value version. The difference in
+the source code is just a couple of bangs.
+
+In Coq, we use well-typed impredicative Church encodings, which are slightly
+more expensive than the untyped ones, because it also abstracts over a type
+parameter.  We use `eq_refl` for conversion checking. For normalization, we use
+conversion functions which go from Church encodings to inductive first-order
+types. We use this because I was not able to find a good direct way in Coq to
+force normalization of large Church trees, because `Eval compute` will attempt
+to print the results, which has very large irrelevant overheads. Hence, the Coq
+results don't measure exactly the same things as HOAS results.
 
 I made a non-trivial amount of effort trying to tune runtime options, but I
 don't have much experience in tuning things besides GHC, so feel free to correct
@@ -61,22 +73,21 @@ me.
 
 #### Results
 
-GHC CBV is call-by-value, GHC CBN is call-by-need, all other columns are
-call-by-value. Times are in milliseconds and are averages of 20 runs, except in
+Times are in milliseconds and are averages of 20 runs, except in
 Coq, where it's a single `coqc` run.
 
-|   | GHC HOAS CBV | GHC HOAS CBN | nodejs HOAS | Scala HOAS | F# HOAS  | Coq Church coding |
+|   | GHC HOAS CBV | GHC HOAS CBN | nodejs HOAS | Scala HOAS | F# HOAS  | Coq |
 |:--|:--------|:-------|:------|:----|:------|:------
 | Nat 5M conversion | 90 | 112 | 700 | 376        | 1246 | stack overflow
 | Nat 5M normalization | 101 | 108 | 976 | 320    | 69592 | stack overflow
 | Nat 10M conversion | 208 | 224 | 1395 | 1122    | 4462 | stack overflow
 | Nat 10M normalization | 227 | 269 | 3718 | 4422 | too long | stack overflow
 | Tree 2M conversion | 136 | 114  | 396 | 146     | 305 | 785
-| Tree 2M normalization | 86 | 76 | 323  | 88     | 1514 | N/A
+| Tree 2M normalization | 86 | 76 | 323  | 88     | 1514 | 631
 | Tree 4M conversion | 294 | 229 | 827 | 288      | 630 | 1530
-| Tree 4M normalization | 192 | 194 | 635 | 174   | 3119 | N/A
+| Tree 4M normalization | 192 | 194 | 635 | 174   | 3119 | 1263
 | Tree 8M conversion | 723 | 457 | 1726 | 743     | 1232 | 2950
-| Tree 8M normalization | 436 | 525 | 1398 | 750  | 5930 | N/A
+| Tree 8M normalization | 436 | 525 | 1398 | 750  | 5930 | 2565
 
 #### Commentary
 
