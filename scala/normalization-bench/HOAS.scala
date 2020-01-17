@@ -89,7 +89,7 @@ object Main extends App {
   // ------------------------------------------------------------
   def leaf = VLam((l:Val) => VLam((n:Val) => l))
   def node = VLam((t1:Val) => VLam((t2:Val) => VLam((l:Val) => VLam((n:Val) =>
-                  ap2(n, t1, t2)))))
+                  ap2(n, ap2(t1, l, n), ap2(t2, l, n))))))
   def fullTree = VLam((n:Val) => ap2(n, VLam((t:Val) => ap2(node, t, t)), leaf))
 
 

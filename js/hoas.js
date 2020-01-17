@@ -97,7 +97,7 @@ const natToInt = (n) => {
 
 const leaf = mkVLam((l) => mkVLam((n) => l))
 const node = mkVLam((t1) => mkVLam((t2) => mkVLam((l) => mkVLam((n) =>
-                   ap2(n, t1, t2)))))
+		ap2(n, ap2(t1, l, n), ap2(t2, l, n))))))
 const fullTree = mkVLam((n) => ap2(n, mkVLam((t) => ap2(node, t, t)), leaf))
 
 

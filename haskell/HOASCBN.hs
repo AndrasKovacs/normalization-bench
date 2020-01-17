@@ -2,9 +2,7 @@
 
 module HOASCBN where
 
-import Data.Time.Clock
-import Control.Monad
-import System.IO
+import Common
 
 data Val = VLam !(Val -> Val) | VVar !Int | VApp !Val Val
 data Tm  = Lam !Tm | App !Tm !Tm | Var !Int deriving Show
@@ -42,11 +40,10 @@ n10M     = mul $$ n1M   $$ n10
 n10Mb    = mul $$ n1Mb  $$ n10b
 n20M     = mul $$ n10M  $$ n2
 n20Mb    = mul $$ n10Mb $$ n2
-n100M    = mul $$ n10M  $$ n10
-n100Mb   = mul $$ n10Mb $$ n10b
 
 leaf     = VLam \l -> VLam \n -> l
-node     = VLam \t1 -> VLam \t2 -> VLam \l -> VLam \n -> n $$ t1 $$ t2
+node     = VLam \t1 -> VLam \t2 -> VLam \l -> VLam \n ->
+             n $$ (t1 $$ l $$ n) $$ (t2 $$ l $$ n)
 fullTree = VLam \n -> n $$ (VLam \t -> node $$ t $$ t) $$ leaf
 
 quote :: Int -> Val -> Tm
@@ -75,21 +72,8 @@ natToInt (Lam (Lam t)) = go 0 t where
   go acc _         = acc
 natToInt _ = 0
 
-timed :: Show b => String -> Int -> (a -> IO b) -> a -> IO ()
-timed msg times act a = do
-  putStrLn msg
-  putStrLn $ "Iterations: " ++ show times
-  t0 <- getCurrentTime
-  replicateM_ times $ do
-    b <- act a
-    putStr $ show b ++ " "
-  t1 <- getCurrentTime
-  putStrLn $ "\nAverage time: " ++ show (diffUTCTime t1 t0 / fromIntegral times)
-{-# noinline timed #-}
-
 bench :: IO ()
 bench = do
-  hSetBuffering stdout NoBuffering
   timed "Nat 5M conversion"     20 (pure . conv0 n5M) n5Mb
   timed "Nat 5M normalization"  20 (pure . force . quote0) n5M
   timed "Nat 10M conversion"    20 (pure . conv0 n10M) n10Mb
