@@ -43,8 +43,14 @@ __GHC__:
 - Compile options: `-O2 -fllvm -rtsopts`.
 - Runtime options: `+RTS -A1G -s`.
 
-In all of the above cases, the implementations are virtually the same. All implementations
-use idiomatic ADTs or a straightforward emulation of them (in the case of js) to represent lambda terms and HOAS values.
+__Coq__
+- coqc 8.10.2
+- `coqc -impredicative-set`.
+
+The implementations are virtually the same except in Coq, where we are using
+well-typed impredicative Church encodings. The deep HOAS implementations use
+idiomatic ADTs or a straightforward emulation of them (in the case of js) to
+represent lambda terms and HOAS values.
 
 The benchmarks are normalization and beta-conversion checking on Church-encoded unary natural numbers and
 binary trees.
@@ -55,20 +61,22 @@ me.
 
 #### Results
 
-GHC CBV is call-by-value, GHC CBN is call-by-need, all other columns are call-by-value. Times are in milliseconds and are averages of 20 runs.
+GHC CBV is call-by-value, GHC CBN is call-by-need, all other columns are
+call-by-value. Times are in milliseconds and are averages of 20 runs, except in
+Coq, where it's a single `coqc` run.
 
-|   | GHC CBV | GHC CBN | nodejs | Scala | F#  |
-|:--|:--------|:-------|:------|:----|:------|
-| Nat 5M conversion | 90 | 112 | 700 | 376        | 1246
-| Nat 5M normalization | 101 | 108 | 976 | 320    | 69592
-| Nat 10M conversion | 208 | 224 | 1395 | 1122    | 4462
-| Nat 10M normalization | 227 | 269 | 3718 | 4422 | too long
-| Tree 2M conversion | 136 | 114  | 396 | 146     | 305
-| Tree 2M normalization | 86 | 76 | 323  | 88     | 1514
-| Tree 4M conversion | 294 | 229 | 827 | 288      | 630
-| Tree 4M normalization | 192 | 194 | 635 | 174   | 3119
-| Tree 8M conversion | 723 | 457 | 1726 | 743     | 1232
-| Tree 8M normalization | 436 | 525 | 1398 | 750  | 5930
+|   | GHC HOAS CBV | GHC HOAS CBN | nodejs HOAS | Scala HOAS | F# HOAS  | Coq Church coding |
+|:--|:--------|:-------|:------|:----|:------|:------
+| Nat 5M conversion | 90 | 112 | 700 | 376        | 1246 | stack overflow
+| Nat 5M normalization | 101 | 108 | 976 | 320    | 69592 | stack overflow
+| Nat 10M conversion | 208 | 224 | 1395 | 1122    | 4462 | stack overflow
+| Nat 10M normalization | 227 | 269 | 3718 | 4422 | too long | stack overflow
+| Tree 2M conversion | 136 | 114  | 396 | 146     | 305 | 785
+| Tree 2M normalization | 86 | 76 | 323  | 88     | 1514 | N/A
+| Tree 4M conversion | 294 | 229 | 827 | 288      | 630 | 1530
+| Tree 4M normalization | 192 | 194 | 635 | 174   | 3119 | N/A
+| Tree 8M conversion | 723 | 457 | 1726 | 743     | 1232 | 2950
+| Tree 8M normalization | 436 | 525 | 1398 | 750  | 5930 | N/A
 
 #### Commentary
 
