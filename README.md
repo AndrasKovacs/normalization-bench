@@ -112,12 +112,40 @@ numbers; perhaps there is some issue with deep stacks.
 
 __nodejs__. Also pretty disappointing all around, although better than F#.
 
+__GHC CBV interpreter__ is doing pretty well. It's already at worst half as fast
+as Scala, and there are a number of optimizations still on the table. I'd first try
+to add known call optimization.
+
+__smalltt__ is slower than the barebones interpreter, which is as expected,
+because smalltt has an evaluator which does significantly more bookkeeping
+(serving elaboration purposes).
+
 General comments.
-- Stack space was an issue. All non-GHC contestants have very inadequate stack space defaults. The UX of increasing stack space was best with Scala, where I applaud JVM for at least providing a platform-independent stack size option, although sbt specifically has a [bug](https://github.com/sbt/sbt/issues/5181) which required me to set options via SBT_OPTS environment variable, instead of program flags. In contrast, F# and nodejs don't seem to have such option, and I had to use `ulimit`.
-- All solutions benefit dramatically from throwing more memory at GC. Even GHC had 3-6 times speedup from `-A1G`. Scala and nodejs performance becomes dismal without free RAM; I plan to put these numbers up here as well. I suspect that F# is crippled by the same issues, but I was not able to use options to throw more memory at it.
-- Startup time in nodejs is excellent, but F# and Scala are rather sluggish. GC pause variance is way more in the non-GHC solutions, with occasional multi-second pauses in nodejs and Scala.
-- There are some stability issues in nodejs and Scala. In the former, I sometimes got runtime exceptions for 10M Nat, presumably related to too deep stacks (it was *not* stack overflow exception though, but some internal error!). In the latter, with 5M and 10M Nats, sometimes I got a sudden memory hike which resulted in out-of-memory process termination.
-- __Call-by-need evaluation__ has only been benchmarked with GHC! CBN is critically important for type checking, and there is a good chance that CBN would make performance significantly worse elsewhere, since only GHC has native RTS support for CBN.
+- Stack space was an issue with JITs. All of those have very inadequate stack
+  space defaults. The UX of increasing stack space was best with Scala, where I
+  applaud JVM for at least providing a platform-independent stack size option,
+  although sbt specifically has a [bug](https://github.com/sbt/sbt/issues/5181)
+  which required me to set options via SBT_OPTS environment variable, instead of
+  program flags. In contrast, F# and nodejs don't seem to have such option, and
+  I had to use `ulimit`.
+- All solutions benefit dramatically from throwing more memory at GC. GHC
+  solutions & smalltt had 3-6 times speedup from `-A1G`. Scala and nodejs
+  performance becomes dismal without free RAM; I plan to put these numbers up
+  here as well. I suspect that F# is crippled by the same issues, but I was not
+  able to use options to throw more memory at it. I also don't know how to throw
+  memory at Coq.
+- Startup time in nodejs is excellent, but F# and Scala are rather sluggish. GC
+  pause variance is way more in the non-GHC solutions, with occasional
+  multi-second pauses in nodejs and Scala.
+- There are some stability issues in nodejs and Scala. In the former, I
+  sometimes got runtime exceptions for 10M Nat, presumably related to too deep
+  stacks (it was *not* stack overflow exception though, but some internal
+  error!). In the latter, with 5M and 10M Nats, sometimes I got a sudden memory
+  hike which resulted in out-of-memory process termination.
+- All JIT solutions are CBV, however, CBN is essential for type checking and
+  unfortunately there is a good chance that CBN would be a significant
+  performance hit there. This should be also benchmarked.
+
 
 #### TODO
 - Add bench figures without free memory options.
