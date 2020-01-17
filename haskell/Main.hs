@@ -1,14 +1,20 @@
 
 module Main where
 
-import qualified HOASCBV
-import qualified HOASCBN
+-- import qualified HOASCBV
+-- import qualified HOASCBN
+import qualified Interp
 
 main :: IO ()
 main = do
-  putStrLn "Call-by-value"
+  -- putStrLn "HOAS call-by-value"
+  -- putStrLn "----------------------------------------"
+  -- HOASCBV.bench
+
+  -- putStrLn "HOAS call-by-need"
+  -- putStrLn "----------------------------------------"
+  -- HOASCBN.bench
+
+  putStrLn "Interpreted call-by-value"
   putStrLn "----------------------------------------"
-  HOASCBV.bench
-  putStrLn "Call-by-need"
-  putStrLn "----------------------------------------"
-  HOASCBN.bench
+  Interp.bench

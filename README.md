@@ -59,8 +59,10 @@ numbers and binary trees.
 All deep HOAS implementations are virtually the same; the use idiomatic ADTs for
 terms and HOAS values, or straightforward ADT emulation in the case of javascript.
 
-In GHC, we have a call-by-need and a call-by-value version. The difference in
-the source code is just a couple of bangs.
+In GHC, we have a call-by-need and a call-by-value HOAS version. The difference
+in the source code is just a couple of bangs. We also have an AST interpreted
+CBV normalizer. The interpreter is fairly efficient, but we don't have any
+optimization on the object language.
 
 In Coq, we use well-typed impredicative Church encodings, which are slightly
 more expensive than the untyped ones, because it also abstracts over a type
@@ -80,21 +82,22 @@ me.
 
 #### Results
 
-Times in milliseconds. For HOAS-es results are averages of 20 runs. For Coq and
-smalltt results are from a single run.
+Times in milliseconds. For Coq & smalltt results are from a single run. For everything
+else results are averages of 20 runs.
 
-|   | GHC HOAS CBV | GHC HOAS CBN | nodejs HOAS | Scala HOAS | F# HOAS  | Coq | smalltt
-|:--|:--------|:-------|:------|:----|:------|:------|:----
-| Nat 5M conversion | 90 | 112 | 700 | 376        | 1246 | stack overflow | 500
-| Nat 5M normalization | 101 | 108 | 976 | 320    | 69592 | stack overflow | 411
-| Nat 10M conversion | 208 | 224 | 1395 | 1122    | 4462 | stack overflow | 1681
-| Nat 10M normalization | 227 | 269 | 3718 | 4422 | too long | stack overflow | 1148
-| Tree 2M conversion | 136 | 114  | 396 | 146     | 305 | 785 | 425
-| Tree 2M normalization | 86 | 76 | 323  | 88     | 1514 | 631 | 346
-| Tree 4M conversion | 294 | 229 | 827 | 288      | 630 | 1530 | 1429
-| Tree 4M normalization | 192 | 194 | 635 | 174   | 3119 | 1263 | 745
-| Tree 8M conversion | 723 | 457 | 1726 | 743     | 1232 | 2950 | 2371
-| Tree 8M normalization | 436 | 525 | 1398 | 750  | 5930 | 2565 | 1544
+
+|   | GHC HOAS CBV | GHC HOAS CBN | GHC interp CBV | nodejs HOAS | Scala HOAS | F# HOAS | Coq | smalltt
+|:--|:--------|:-------|:------|:----|:------|:------|:----|:----
+| Nat 5M conversion     | 90  | 112 | 234 | 700  | 376  | 1246     | stack overflow | 500
+| Nat 5M normalization  | 101 | 108 | 167 | 976  | 320  | 69592    | stack overflow | 411
+| Nat 10M conversion    | 208 | 224 | 695 | 1395 | 1122 | 4462     | stack overflow | 1681
+| Nat 10M normalization | 227 | 269 | 439 | 3718 | 4422 | too long | stack overflow | 1148
+| Tree 2M conversion    | 136 | 114 | 274 | 396  | 146  | 305      | 785            | 425
+| Tree 2M normalization | 86  | 76  | 163 | 323  | 88   | 1514     | 631            | 346
+| Tree 4M conversion    | 294 | 229 | 588 | 827  | 288  | 630      | 1530           | 1429
+| Tree 4M normalization | 192 | 194 | 343 | 635  | 174  | 3119     | 1263           | 745
+| Tree 8M conversion    | 723 | 457 | 1268| 1726 | 743  | 1232     | 2950           | 2371
+| Tree 8M normalization | 436 | 525 | 716 | 1398 | 750  | 5930     | 2565           | 1544
 
 #### Commentary
 
