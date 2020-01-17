@@ -93,14 +93,14 @@ open HOASNf
 
 [<EntryPoint>]
 let main argv =
-  // timed "Nat 5M conversion"      20L (fun _ -> conv0 n5M n5Mb)
-  // timed "Nat 5M normalization"   5L (fun _ -> force (quote0 n5M))
-  // timed "Nat 10M conversion"     5L (fun _ -> conv0 n10M n10Mb)
-  // timed "Nat 10M normalization"  20L (fun _ -> force (quote0 n10M))
-  // timed "Tree 2M conversion"     20L (fun _ -> conv0 (ap fullTree n20) (ap fullTree n20b))
-  // timed "Tree 2M normalization"  5L (fun _ -> force (quote0 (ap fullTree n20)))
-  // timed "Tree 4M conversion"     20L (fun _ -> conv0 (ap fullTree n21) (ap fullTree n21b))
-  // timed "Tree 4M normalization"  5L (fun _ -> force (quote0 (ap fullTree n21)))
-  // timed "Tree 8M conversion"     20L (fun _ -> conv0 (ap fullTree n22) (ap fullTree n22b))
-  timed "Tree 8M normalization"  5L (fun _ -> force (quote0 (ap fullTree n22)))
+  timed "Nat 5M conversion"      20L (fun _ -> conv0 n5M n5Mb)
+  timed "Nat 5M normalization"   20L (fun _ -> force (quote0 n5M))
+  timed "Nat 10M conversion"     20L (fun _ -> conv0 n10M n10Mb)
+  timed "Nat 10M normalization"  20L (fun _ -> force (quote0 n10M))
+  timed "Tree 2M conversion"     20L (fun _ -> conv0 (ap fullTree n20) (ap fullTree n20b))
+  timed "Tree 2M normalization"  20L (fun _ -> force (quote0 (ap fullTree n20)))
+  timed "Tree 4M conversion"     20L (fun _ -> conv0 (ap fullTree n21) (ap fullTree n21b))
+  timed "Tree 4M normalization"  20L (fun _ -> force (quote0 (ap fullTree n21)))
+  timed "Tree 8M conversion"     20L (fun _ -> conv0 (ap fullTree n22) (ap fullTree n22b))
+  timed "Tree 8M normalization"  20L (fun _ -> force (quote0 (ap fullTree n22)))
   0

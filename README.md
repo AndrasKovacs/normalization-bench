@@ -63,12 +63,12 @@ GHC CBV is call-by-value, GHC CBN is call-by-need, all other columns are call-by
 | Nat 5M normalization | 101 | 108 | 976 | 320    | 69592
 | Nat 10M conversion | 208 | 224 | 1395 | 1122    | 4462
 | Nat 10M normalization | 227 | 269 | 3718 | 4422 | too long
-| Tree 2M conversion | 55 | 51  | 356 | 160       | 298
-| Tree 2M normalization | 73 | 88 | 379  | 116    | 1817
-| Tree 4M conversion | 110 | 103 | 536 | 217      | 591
-| Tree 4M normalization | 220 | 222 | 802 | 273   | 3897
-| Tree 8M conversion | 217 | 205 | 1187 | 436     | 1182
-| Tree 8M normalization | 618 | 620 | 1890 | 1442 | 10297
+| Tree 2M conversion | 136 | 114  | 396 | 146     | 305
+| Tree 2M normalization | 86 | 76 | 323  | 88     | 1514
+| Tree 4M conversion | 294 | 229 | 827 | 288      | 630
+| Tree 4M normalization | 192 | 194 | 635 | 174   | 3119
+| Tree 8M conversion | 723 | 457 | 1726 | 743     | 1232
+| Tree 8M normalization | 436 | 525 | 1398 | 750  | 5930
 
 #### Commentary
 
@@ -76,7 +76,10 @@ __F#__. Performance here was the most disappointing. I had hopes for F# since it
 of the JIT pack by a significant margin, and I thought it would be tolerable or even superior to Haskell to
 implement everything in F#, because of the support for high-performance non-persistent data structures, monomorphization, unpacked structures, etc. Now, there could be some GC option which magically repairs this, but I've tried and have not found a way to make it go faster.
 
-__Scala__. I had never used Scala before, and I found the language relatively pleasant, and definitely vastly better than Java or even Clojure. That said, performance is acceptable, but not really good. Normalization performance degrades disproportionately (apparently way worse than linear) when moving from 5M to 10M and from 4M to 8M.
+__Scala__. I had never used Scala before, and I found the language relatively
+pleasant, and definitely vastly better than Java or even Clojure. That said,
+performance seems good for trees but degrades sharply from 5M to 10M with natural
+numbers; perhaps there is some issue with deep stacks.
 
 __nodejs__. Also pretty disappointing all around, although better than F#.
 
@@ -94,8 +97,23 @@ General comments.
 
 #### Preliminary analysis & conclusions
 
-Modern JIT platforms suck at lambda calculus. There seems to be little sense in writing high-performance proof assistants in any of the JIT languages; plain hand-written interpreters in GHC are competitive with compiled JIT HOAS. Perhaps compiling directly to CLR/JVM bytecode would be better, but I am skeptical, and I would be hard pressed to implement that myself.
+Modern JIT platforms don't seem to be good at lambda calculus. From the current
+benchamrking, JVM seems to be the best choice. However, I haven't yet
+benchmarked call-by-need, which could possibly be a significant performance hit
+on JVM. At the moment it does not seem worth to write high-performance proof
+assistant implementation in any of the JIT languages, because plain hand-written
+interpreters in GHC are much more convenient to maintain and develop and have
+comparable performance to JIT HOAS. Perhaps compiling directly to CLR/JVM
+bytecode would be better, but I am skeptical, and I would be hard pressed to
+implement that myself.
 
-A very high-effort solution is the Lean way: implement runtime system from scratch. I would also like to do this once for a minimal untyped lambda calculus, and just try to make it as fast as possible. I am sure GHC HOAS can be beaten this way, but I am not sure that the effort is worth it.
+A very high-effort solution is the Lean way: implement runtime system from
+scratch. I would also like to do this once for a minimal untyped lambda
+calculus, and just try to make it as fast as possible. I am sure GHC HOAS can be
+beaten this way, but I am not sure that the effort is worth it.
 
-I am entertaining more seriously the solution to use GHC HOAS in real-world type theory implementations, by primarily using interpretation but constantly doing compilation via GHC in the background, and switching out definitions. Combined with more sophisticated diffing and incrementalization, this could have good UX even in a single module.
+I am entertaining more seriously the solution to use GHC HOAS in real-world type
+theory implementations, by primarily using interpretation but constantly doing
+compilation via GHC in the background, and switching out definitions. Combined
+with more sophisticated diffing and incrementalization, this could have good UX
+even in a single module.

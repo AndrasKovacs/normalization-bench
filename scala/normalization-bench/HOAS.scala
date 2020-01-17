@@ -127,10 +127,10 @@ object Main extends App {
     println(s"\nAverage time: $avg ms")
   }
 
-  Timed("Nat 5M conversion"     , 20, () => conv0(n5M, n5Mb))
-  Timed("Nat 5M normalization"  , 20, () => force(quote0(n5M)))
-  Timed("Nat 10M conversion"    , 20, () => conv0(n10M, n10Mb))
-  Timed("Nat 10M normalization" , 20, () => force(quote0(n10M)))
+  // Timed("Nat 5M conversion"     , 20, () => conv0(n5M, n5Mb))
+  // Timed("Nat 5M normalization"  , 20, () => force(quote0(n5M)))
+  // Timed("Nat 10M conversion"    , 20, () => conv0(n10M, n10Mb))
+  // Timed("Nat 10M normalization" , 20, () => force(quote0(n10M)))
   Timed("Tree 2M conversion"    , 20, () => conv0(ap(fullTree, n20), ap(fullTree, n20b)))
   Timed("Tree 2M normalization" , 20, () => force(quote0(ap(fullTree, n20))))
   Timed("Tree 4M conversion"    , 20, () => conv0(ap(fullTree, n21), ap(fullTree, n21b)))
