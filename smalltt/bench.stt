@@ -1,0 +1,56 @@
+
+Eq : {A} → A → A → U
+ = λ {A} x y. (P : A → U) → P x → P y
+
+refl : {A}{x : A} → Eq x x
+ = λ P px. px
+
+Nat : U   = (N : U) → (N → N) → N → N
+n2  : Nat = λ N s z. s (s z)
+n5  : Nat = λ N s z. s (s (s (s (s z))))
+mul : Nat → Nat → Nat = λ a b N s z. a N (b N s) z
+suc : Nat → Nat = λ a N s z. s (a N s z)
+
+n10    = mul n2 n5
+n10b   = mul n5 n2
+n20    = mul n2 n10
+n20b   = mul n2 n10b
+n21    = suc n20
+n21b   = suc n20b
+n22    = suc n21
+n22b   = suc n21b
+n100   = mul n10   n10
+n100b  = mul n10b  n10b
+n10k   = mul n100  n100
+n10kb  = mul n100b n100b
+n100k  = mul n10k  n10
+n100kb = mul n10kb n10b
+n1M    = mul n10k  n100
+n1Mb   = mul n10kb n100b
+n5M    = mul n1M   n5
+-- n5M [normalize]  = mul n1M   n5
+n5Mb   = mul n1Mb  n5
+n10M = mul n1M   n10
+-- n10M [normalize]  = mul n1M   n10
+n10Mb  = mul n1Mb  n10b
+n20M   = mul n10M  n2
+n20Mb  = mul n10Mb n2
+
+Tree : U = (T : U) → T → (T → T → T) → T
+leaf : Tree = λ T l n. l
+node : Tree → Tree → Tree = λ t1 t2 T l n. n (t1 T l n) (t2 T l n)
+fullTree : Nat → Tree = λ n. n _ (λ t. node t t) leaf
+
+convn5M [elaborate] : Eq n5M n5Mb = refl
+convn10M [elaborate] : Eq n10M n10Mb = refl
+
+-- t2M  [normalize] = fullTree n20
+-- t4M  [normalize] = fullTree n21
+-- t8M  [normalize] = fullTree n22
+-- t2Mb = fullTree n20b
+-- t4Mb = fullTree n21b
+-- t8Mb = fullTree n22b
+
+-- convt2M [elaborate] : Eq t2M t2Mb = refl
+-- convt4M [elaborate] : Eq t4M t4Mb = refl
+-- convt8M [elaborate] : Eq t8M t8Mb = refl

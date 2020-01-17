@@ -47,6 +47,10 @@ __Coq__
 - coqc 8.10.2
 - `coqc -impredicative-set`.
 
+__smalltt__
+- [smalltt 0.2.0.0](https://github.com/AndrasKovacs/smalltt)
+- Runtime options: `+RTS -A1G`.
+
 #### Benchmarks & implementations
 
 Benchmarks are normalization and beta-conversion checking on Church-coded unary
@@ -67,27 +71,30 @@ force normalization of large Church trees, because `Eval compute` will attempt
 to print the results, which has very large irrelevant overheads. Hence, the Coq
 results don't measure exactly the same things as HOAS results.
 
+Smalltt is similar to the Coq implementation, except that we can directly
+normalize Church numbers and trees.
+
 I made a non-trivial amount of effort trying to tune runtime options, but I
 don't have much experience in tuning things besides GHC, so feel free to correct
 me.
 
 #### Results
 
-Times are in milliseconds and are averages of 20 runs, except in
-Coq, where it's a single `coqc` run.
+Times in milliseconds. For HOAS-es results are averages of 20 runs. For Coq and
+smalltt results are from a single run.
 
-|   | GHC HOAS CBV | GHC HOAS CBN | nodejs HOAS | Scala HOAS | F# HOAS  | Coq |
-|:--|:--------|:-------|:------|:----|:------|:------
-| Nat 5M conversion | 90 | 112 | 700 | 376        | 1246 | stack overflow
-| Nat 5M normalization | 101 | 108 | 976 | 320    | 69592 | stack overflow
-| Nat 10M conversion | 208 | 224 | 1395 | 1122    | 4462 | stack overflow
-| Nat 10M normalization | 227 | 269 | 3718 | 4422 | too long | stack overflow
-| Tree 2M conversion | 136 | 114  | 396 | 146     | 305 | 785
-| Tree 2M normalization | 86 | 76 | 323  | 88     | 1514 | 631
-| Tree 4M conversion | 294 | 229 | 827 | 288      | 630 | 1530
-| Tree 4M normalization | 192 | 194 | 635 | 174   | 3119 | 1263
-| Tree 8M conversion | 723 | 457 | 1726 | 743     | 1232 | 2950
-| Tree 8M normalization | 436 | 525 | 1398 | 750  | 5930 | 2565
+|   | GHC HOAS CBV | GHC HOAS CBN | nodejs HOAS | Scala HOAS | F# HOAS  | Coq | smalltt
+|:--|:--------|:-------|:------|:----|:------|:------|:----
+| Nat 5M conversion | 90 | 112 | 700 | 376        | 1246 | stack overflow | 500
+| Nat 5M normalization | 101 | 108 | 976 | 320    | 69592 | stack overflow | 411
+| Nat 10M conversion | 208 | 224 | 1395 | 1122    | 4462 | stack overflow | 1681
+| Nat 10M normalization | 227 | 269 | 3718 | 4422 | too long | stack overflow | 1148
+| Tree 2M conversion | 136 | 114  | 396 | 146     | 305 | 785 | 425
+| Tree 2M normalization | 86 | 76 | 323  | 88     | 1514 | 631 | 346
+| Tree 4M conversion | 294 | 229 | 827 | 288      | 630 | 1530 | 1429
+| Tree 4M normalization | 192 | 194 | 635 | 174   | 3119 | 1263 | 745
+| Tree 8M conversion | 723 | 457 | 1726 | 743     | 1232 | 2950 | 2371
+| Tree 8M normalization | 436 | 525 | 1398 | 750  | 5930 | 2565 | 1544
 
 #### Commentary
 
@@ -112,7 +119,8 @@ General comments.
 #### TODO
 - Add bench figures without free memory options.
 - Add figures for AST interpreters.
-- Add OCaml, Coq, Agda, smalltt, Lean 3/4, [mlang](https://github.com/molikto/mlang).
+- More benchmarks
+- Add OCaml, Agda, Lean 3/4, [mlang](https://github.com/molikto/mlang).
 
 #### Preliminary analysis & conclusions
 
