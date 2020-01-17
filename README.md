@@ -90,12 +90,11 @@ General comments.
 #### TODO
 - Add bench figures without free memory options.
 - Add figures for AST interpreters.
-- Add OCaml, Coq, Agda, smalltt, Lean 3/4.
-- Benchmark molikto's [mlang](https://github.com/molikto/mlang), which is written in Scala but uses direct compilation to JVM bytecode instead of going through HOAS.
+- Add OCaml, Coq, Agda, smalltt, Lean 3/4, [mlang](https://github.com/molikto/mlang).
 
 #### Preliminary analysis & conclusions
 
-Modern JIT platforms suck at lambda calculus. There seems to be little sense in writing high-performance proof assistants in any of the JIT languages; plain hand-written interpreters in GHC are competitive with compiled JIT HOAS. Perhaps compiling directly to CLR/JVM bytecode would be better (benchmark TODO via mlang), but I am skeptical, and I would be hard pressed to implement that myself.
+Modern JIT platforms suck at lambda calculus. There seems to be little sense in writing high-performance proof assistants in any of the JIT languages; plain hand-written interpreters in GHC are competitive with compiled JIT HOAS. Perhaps compiling directly to CLR/JVM bytecode would be better, but I am skeptical, and I would be hard pressed to implement that myself.
 
 A very high-effort solution is the Lean way: implement runtime system from scratch. I would also like to do this once for a minimal untyped lambda calculus, and just try to make it as fast as possible. I am sure GHC HOAS can be beaten this way, but I am not sure that the effort is worth it.
 
