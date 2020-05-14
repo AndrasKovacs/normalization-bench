@@ -46,6 +46,7 @@ __GHC__:
 __Coq__
 - coqc 8.10.2
 - `coqc -impredicative-set`.
+- `su`, `ulimit -s unlimited`, timing with `/usr/bin/time -v`. 
 
 __smalltt__
 - [smalltt 0.2.0.0](https://github.com/AndrasKovacs/smalltt)
