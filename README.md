@@ -117,6 +117,9 @@ __GHC CBV interpreter__ is doing pretty well. It's already at worst half as fast
 as Scala, and there are a number of optimizations still on the table. I'd first try
 to add known call optimization.
 
+In __Coq__ it appears that deep stacks somewhere incur some serious overheads, so the Nat
+examples get very slow. Performance with trees seems acceptable.
+
 __smalltt__ is slower than the barebones interpreter, which is as expected,
 because smalltt has an evaluator which does significantly more bookkeeping
 (serving elaboration purposes).
