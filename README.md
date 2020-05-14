@@ -86,18 +86,18 @@ Times in milliseconds. For Coq & smalltt results are from a single run. For ever
 else results are averages of 20 runs.
 
 
-|   | GHC HOAS CBV | GHC HOAS CBN | GHC interp CBV | nodejs HOAS | Scala HOAS | F# HOAS | Coq | smalltt
+|   | GHC HOAS CBV | GHC HOAS CBN | GHC interp CBV | nodejs HOAS | Scala HOAS | F# HOAS | Coq compute | Coq lazy | smalltt
 |:--|:--------|:-------|:------|:----|:------|:------|:----|:----
-| Nat 5M conversion     | 90  | 112 | 234 | 700  | 376  | 1246     | stack overflow | 500
-| Nat 5M normalization  | 101 | 108 | 167 | 976  | 320  | 69592    | stack overflow | 411
-| Nat 10M conversion    | 208 | 224 | 695 | 1395 | 1122 | 4462     | stack overflow | 1681
-| Nat 10M normalization | 227 | 269 | 439 | 3718 | 4422 | too long | stack overflow | 1148
-| Tree 2M conversion    | 136 | 114 | 274 | 396  | 146  | 305      | 785            | 425
-| Tree 2M normalization | 86  | 76  | 163 | 323  | 88   | 1514     | 631            | 346
-| Tree 4M conversion    | 294 | 229 | 588 | 827  | 288  | 630      | 1530           | 1429
-| Tree 4M normalization | 192 | 194 | 343 | 635  | 174  | 3119     | 1263           | 745
-| Tree 8M conversion    | 723 | 457 | 1268| 1726 | 743  | 1232     | 2950           | 2371
-| Tree 8M normalization | 436 | 525 | 716 | 1398 | 750  | 5930     | 2565           | 1544
+| Nat 5M conversion     | 90  | 112 | 234 | 700  | 376  | 1246     | 43080  | too long | 500
+| Nat 5M normalization  | 101 | 108 | 167 | 976  | 320  | 69592    | 14630  | 50240    | 411
+| Nat 10M conversion    | 208 | 224 | 695 | 1395 | 1122 | 4462     | 159880 | too long | 1681
+| Nat 10M normalization | 227 | 269 | 439 | 3718 | 4422 | too long | 53280  | 220150   | 1148
+| Tree 2M conversion    | 136 | 114 | 274 | 396  | 146  | 305      | 780    | 790      | 425
+| Tree 2M normalization | 86  | 76  | 163 | 323  | 88   | 1514     | 760    | 850      | 346
+| Tree 4M conversion    | 294 | 229 | 588 | 827  | 288  | 630      | 1620   | 1490     | 1429
+| Tree 4M normalization | 192 | 194 | 343 | 635  | 174  | 3119     | 1500   | 1680     | 745
+| Tree 8M conversion    | 723 | 457 | 1268| 1726 | 743  | 1232     | 3290   | 2920     | 2371
+| Tree 8M normalization | 436 | 525 | 716 | 1398 | 750  | 5930     | 2940   | 3310     | 1544
 
 #### Commentary
 
