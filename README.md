@@ -88,7 +88,7 @@ else results are averages of 20 runs.
 
 
 |   | GHC HOAS CBV | GHC HOAS CBN | GHC interp CBV | nodejs HOAS | Scala HOAS | F# HOAS | Coq compute | Coq lazy | smalltt
-|:--|:--------|:-------|:------|:----|:------|:------|:----|:----
+|:--|:--------|:-------|:------|:----|:------|:------|:----|:----|:----
 | Nat 5M conversion     | 90  | 112 | 234 | 700  | 376  | 1246     | 43080  | too long | 500
 | Nat 5M normalization  | 101 | 108 | 167 | 976  | 320  | 69592    | 14630  | 50240    | 411
 | Nat 10M conversion    | 208 | 224 | 695 | 1395 | 1122 | 4462     | 159880 | too long | 1681
