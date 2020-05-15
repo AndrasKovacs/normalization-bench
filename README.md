@@ -65,7 +65,7 @@ __smalltt__
 Benchmarks are normalization and beta-conversion checking on Church-coded unary
 numbers and binary trees.
 
-All deep HOAS implementations are virtually the same; the use idiomatic ADTs for
+All deep HOAS implementations are virtually the same; they use idiomatic ADTs for
 terms and HOAS values, or straightforward ADT emulation in the case of javascript.
 
 In GHC, we have a call-by-need and a call-by-value HOAS version. The difference
@@ -75,15 +75,7 @@ optimization on the object language.
 
 In Coq, we use well-typed impredicative Church encodings, which are slightly
 more expensive than the untyped ones, because it also abstracts over a type
-parameter.  We use `eq_refl` for conversion checking. For normalization, we use
-conversion functions which go from Church encodings to inductive first-order
-types. We use this because I was not able to find a good direct way in Coq to
-force normalization of large Church trees, because `Eval compute` will attempt
-to print the results, which has very large irrelevant overheads. Hence, the Coq
-results don't measure exactly the same things as HOAS results.
-
-Smalltt is similar to the Coq implementation, except that we can directly
-normalize Church numbers and trees.
+parameter. We use `eq_refl` for conversion checking. Smalltt is similar to the Coq implementation.
 
 I made a non-trivial amount of effort trying to tune runtime options, but I
 don't have much experience in tuning things besides GHC, so feel free to correct
@@ -129,30 +121,31 @@ __OCaml__ HOAS is pretty good, with surprisingly fast tree conversion, although
 worse than GHC elsewhere. The effect of free memory RTS options was huge here: 2-10x
 speedup.
 
-__Coq__. I note that while some benchmarks (e.g. cbv Nat) benefited enormously
+__Coq__. I note that while some benchmarks (e.g. cbv natural numbers) benefited enormously
 from the free memory for GC, some of them slowed down 10-30%. Overal the free
-memory RTS setting performed better. It's worth noting that native_compute performs
+memory RTS setting performed better than defaults. It's worth noting that native_compute performs
 significantly worse than OCaml HOAS, though the two should be similar; probably
 native_compute does not use flambda optimization options at all.
 
-__smalltt__ is slower than the barebones interpreter, which is as expected,
+__smalltt__ is slower than the barebones GHC interpreter, which is as expected,
 because smalltt has an evaluator which does significantly more bookkeeping
 (serving elaboration purposes).
 
 General comments.
-- Stack space was an issue with JITs. All of those have very inadequate stack
+- Stack space was an issue with JITs, OCaml and Coq. All of these have very inadequate stack
   space defaults. The UX of increasing stack space was best with Scala, where I
   applaud JVM for at least providing a platform-independent stack size option,
   although sbt specifically has a [bug](https://github.com/sbt/sbt/issues/5181)
   which required me to set options via SBT_OPTS environment variable, instead of
   program flags. In contrast, F# and nodejs don't seem to have such option, and
-  I had to use `ulimit`.
-- All solutions benefit dramatically from throwing more memory at GC. GHC
+  I had to use `ulimit`. OCaml and Coq have a stack limit option in `OCAMLRUNPARAM`,
+  but when I maxed that out I still got overflow errors, so I used `ulimit` here as well,
+  which worked.
+- Most solutions benefit from throwing more memory at GC, some dramatically. GHC
   solutions & smalltt had 3-6 times speedup from `-A1G`. Scala and nodejs
   performance becomes dismal without free RAM; I plan to put these numbers up
   here as well. I suspect that F# is crippled by the same issues, but I was not
-  able to use options to throw more memory at it. I also don't know how to throw
-  memory at Coq.
+  able to use options to throw more memory at it. 
 - Startup time in nodejs is excellent, but F# and Scala are rather sluggish. GC
   pause variance is way more in the non-GHC solutions, with occasional
   multi-second pauses in nodejs and Scala.
