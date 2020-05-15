@@ -29,13 +29,13 @@ __Scala__:
 
 __nodejs__:
 - node v13.6.0
-- Runtime options: `su` and `ulimit -s unlimited`, running with `node
+- Runtime options: `ulimit -s unlimited`, running with `node
   --max-old-space-size=4000 --stack-size=6000000`.
 
 __F#__:
 - dotnet 3.0.101 (dotnet core)
 - F# 4.0
-- Runtime options: `su`, `ulimit -s unlimited`, running with `dotnet run -c Release`.
+- Runtime options: `ulimit -s unlimited`, running with `dotnet run -c Release`.
 
 __GHC__:
 - ghc 8.8.1
@@ -44,9 +44,9 @@ __GHC__:
 - Runtime options: `+RTS -A1G -s`.
 
 __Coq__
-- coqc 8.10.2
+- coqc 8.11.1
 - `coqc -impredicative-set`.
-- `su`, `ulimit -s unlimited`, timing with `/usr/bin/time -v`. 
+- `ulimit -s unlimited`, timing with `Time` vernacular command.
 
 __smalltt__
 - [smalltt 0.2.0.0](https://github.com/AndrasKovacs/smalltt)
@@ -87,18 +87,18 @@ Times in milliseconds. For Coq & smalltt results are from a single run. For ever
 else results are averages of 20 runs.
 
 
-|   | GHC HOAS CBV | GHC HOAS CBN | GHC interp CBV | nodejs HOAS | Scala HOAS | F# HOAS | Coq compute | Coq lazy | smalltt
-|:--|:--------|:-------|:------|:----|:------|:------|:----|:----|:----
-| Nat 5M conversion     | 90  | 112 | 234 | 700  | 376  | 1246     | 43080  | too long | 500
-| Nat 5M normalization  | 101 | 108 | 167 | 976  | 320  | 69592    | 14630  | 50240    | 411
-| Nat 10M conversion    | 208 | 224 | 695 | 1395 | 1122 | 4462     | 159880 | too long | 1681
-| Nat 10M normalization | 227 | 269 | 439 | 3718 | 4422 | too long | 53280  | 220150   | 1148
-| Tree 2M conversion    | 136 | 114 | 274 | 396  | 146  | 305      | 780    | 790      | 425
-| Tree 2M normalization | 86  | 76  | 163 | 323  | 88   | 1514     | 760    | 850      | 346
-| Tree 4M conversion    | 294 | 229 | 588 | 827  | 288  | 630      | 1620   | 1490     | 1429
-| Tree 4M normalization | 192 | 194 | 343 | 635  | 174  | 3119     | 1500   | 1680     | 745
-| Tree 8M conversion    | 723 | 457 | 1268| 1726 | 743  | 1232     | 3290   | 2920     | 2371
-| Tree 8M normalization | 436 | 525 | 716 | 1398 | 750  | 5930     | 2940   | 3310     | 1544
+|   | GHC HOAS CBV | GHC HOAS CBN | GHC interp CBV | nodejs HOAS | Scala HOAS | F# HOAS | Coq cbv | Coq lazy | Coq vm_compute | Coq native_compute | smalltt
+|:--|:--------|:-------|:------|:----|:------|:------|:----|:----|:----|:----|:----
+| Nat 5M conversion     | 90  | 112 | 234 | 700  | 376  | 1246     | N/A    | 81349 | 4753  | 7033  | 500
+| Nat 5M normalization  | 101 | 108 | 167 | 976  | 320  | 69592    | 9422   | 3029  | 5550  | 7554  | 411
+| Nat 10M conversion    | 208 | 224 | 695 | 1395 | 1122 | 4462     | N/A    | OOM   | 10404 | 13416 | 1681
+| Nat 10M normalization | 227 | 269 | 439 | 3718 | 4422 | too long | 31962  | 9056  | 14800 | 15029 | 1148
+| Tree 2M conversion    | 136 | 114 | 274 | 396  | 146  | 305      | N/A    | 668   | 561   | 1598  | 425
+| Tree 2M normalization | 86  | 76  | 163 | 323  | 88   | 1514     | 790    | 735   | 907   | 1129  | 346
+| Tree 4M conversion    | 294 | 229 | 588 | 827  | 288  | 630      | N/A    | 1284  | 1276  | 2798  | 1429
+| Tree 4M normalization | 192 | 194 | 343 | 635  | 174  | 3119     | 1450   | 1551  | 1729  | 2301  | 745
+| Tree 8M conversion    | 723 | 457 | 1268| 1726 | 743  | 1232     | N/A    | 2563  | 2420  | 5092  | 2371
+| Tree 8M normalization | 436 | 525 | 716 | 1398 | 750  | 5930     | 2990   | 3358  | 3464  | 3920  | 1544
 
 #### Commentary
 
@@ -117,8 +117,13 @@ __GHC CBV interpreter__ is doing pretty well. It's already at worst half as fast
 as Scala, and there are a number of optimizations still on the table. I'd first try
 to add known call optimization.
 
-In __Coq__ it appears that deep stacks somewhere incur some serious overheads, so the Nat
-examples get very slow. Performance with trees seems acceptable.
+__Coq__. The results are rather weird to be honest. Some general comments first:
+we have to use `ulimit` here as well, otherwise `Nat` benchmarks overflow the
+stack. Also, while it is possible to [tune
+GC](https://caml.inria.fr/pub/docs/manual-ocaml/runtime.html), I have found no
+significant improvement from increasing minor/major heap size. It is surprising
+that `vm_compute` and `native_compute` aren't clearly better than `lazy` and
+`cbv`, and `native` is actually all-around worse on the tree benchmarks.
 
 __smalltt__ is slower than the barebones interpreter, which is as expected,
 because smalltt has an evaluator which does significantly more bookkeeping

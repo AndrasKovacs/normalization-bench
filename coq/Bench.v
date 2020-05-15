@@ -1,5 +1,4 @@
 
-
 Require Import Coq.Unicode.Utf8.
 
 Definition Nat : Set := ∀ (N : Set), (N → N) → N → N.
@@ -54,25 +53,25 @@ Definition normTree (t : Tree) : bool :=
   end.
 
 (* Goal True. idtac "------------- cbv (same as compute)". Abort. *)
-(* Goal True. Time let x := eval cbv in n5M in idtac. Abort. *)
-(* Goal True. Time let x := eval cbv in n10M in idtac. Abort. *)
-(* Goal True. Time idtac "N/A". Abort. *)
-(* Goal True. Time idtac "N/A". Abort. *)
-(* Goal True. Time let x := eval cbv in t2M in idtac. Abort. *)
-(* Goal True. Time let x := eval cbv in t4M in idtac. Abort. *)
-(* Goal True. Time let x := eval cbv in t8M in idtac. Abort. *)
-(* Goal True. Time idtac "N/A". Abort. *)
-(* Goal True. Time idtac "N/A". Abort. *)
-(* Goal True. Time idtac "N/A". Abort. *)
+(* Goal True. Time let x := eval cbv in n5M in idtac "n5M norm". Abort. *)
+(* Goal True. Time let x := eval cbv in n10M in idtac "n10M norm". Abort. *)
+(* Goal True. Time idtac "n5M conv: N/A". Abort. *)
+(* Goal True. Time idtac "n10M conv: N/A". Abort. *)
+(* Goal True. Time let x := eval cbv in t2M in idtac "t2M norm". Abort. *)
+(* Goal True. Time let x := eval cbv in t4M in idtac "t4M norm". Abort. *)
+(* Goal True. Time let x := eval cbv in t8M in idtac "t8M norm". Abort. *)
+(* Goal True. Time idtac "t2M conv: N/A". Abort. *)
+(* Goal True. Time idtac "t4M conv: N/A". Abort. *)
+(* Goal True. Time idtac "t8M conv: N/A". Abort. *)
 
 (* Goal True. idtac "------------- lazy". Abort. *)
-(* Goal True. Time let x := eval lazy in n5M in idtac. Abort. *)
-(* Goal True. Time let x := eval lazy in n10M in idtac. Abort. *)
+(* Goal True. Time let x := eval lazy in n5M in idtac "n5M norm". Abort. *)
+(* Goal True. Time let x := eval lazy in n10M in idtac "n10M norm". Abort. *)
 (* Time Definition foo_l0 : n5M  = n5Mb  := eq_refl. *)
 (* Time Definition foo_l1 : n10M = n10Mb := eq_refl. *)
-(* Goal True. Time let x := eval lazy in t2M in idtac. Abort. *)
-(* Goal True. Time let x := eval lazy in t4M in idtac. Abort. *)
-(* Goal True. Time let x := eval lazy in t8M in idtac. Abort. *)
+(* Goal True. Time let x := eval lazy in t2M in idtac "t2M norm". Abort. *)
+(* Goal True. Time let x := eval lazy in t4M in idtac "t4M norm". Abort. *)
+(* Goal True. Time let x := eval lazy in t8M in idtac "t8M norm". Abort. *)
 (* Time Definition foo_l2 : t2M = t2Mb := eq_refl. *)
 (* Time Definition foo_l3 : t4M = t4Mb := eq_refl. *)
 (* Time Definition foo_l4 : t8M = t8Mb := eq_refl. *)
@@ -90,7 +89,6 @@ Definition normTree (t : Tree) : bool :=
 (* Time Definition foo_v3 := eq_refl t4M <: t4M = t4Mb. *)
 (* Time Definition foo_v4 := eq_refl t8M <: t8M = t8Mb. *)
 
-
 (* Goal True. idtac "------------- native_compute". Abort. *)
 (* Goal True. Time let x := eval native_compute in n5M in idtac. Abort. *)
 (* Goal True. Time let x := eval native_compute in n10M in idtac. Abort. *)
@@ -104,4 +102,4 @@ Definition normTree (t : Tree) : bool :=
 (* Time Definition foo_n3 := eq_refl t4M <<: t4M = t4Mb. *)
 (* Time Definition foo_n4 := eq_refl t8M <<: t8M = t8Mb. *)
 
-(* /usr/bin/time -v coqc -impredicative-set Bench.v *)
+(* coqc -impredicative-set Bench.v *)
