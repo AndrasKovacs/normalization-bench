@@ -1,6 +1,8 @@
 
 Require Import Coq.Unicode.Utf8.
 
+Definition the (A : Type)(x : A) := x.
+
 Definition Nat : Set := ∀ (N : Set), (N → N) → N → N.
 Definition n2  : Nat := λ N s z, s (s z).
 Definition n5  : Nat := λ N s z, s (s (s (s (s z)))).
@@ -67,39 +69,40 @@ Definition normTree (t : Tree) : bool :=
 (* Goal True. idtac "------------- lazy". Abort. *)
 (* Goal True. Time let x := eval lazy in n5M in idtac "n5M norm". Abort. *)
 (* Goal True. Time let x := eval lazy in n10M in idtac "n10M norm". Abort. *)
-(* Time Definition foo_l0 : n5M  = n5Mb  := eq_refl. *)
-(* Time Definition foo_l1 : n10M = n10Mb := eq_refl. *)
+(* Goal True. Time let x := constr:(the (n5M = n5Mb) eq_refl) in idtac. Abort. *)
+(* Goal True. Time let x := constr:(the (n10M = n10Mb) eq_refl) in idtac. Abort. *)
 (* Goal True. Time let x := eval lazy in t2M in idtac "t2M norm". Abort. *)
 (* Goal True. Time let x := eval lazy in t4M in idtac "t4M norm". Abort. *)
 (* Goal True. Time let x := eval lazy in t8M in idtac "t8M norm". Abort. *)
-(* Time Definition foo_l2 : t2M = t2Mb := eq_refl. *)
-(* Time Definition foo_l3 : t4M = t4Mb := eq_refl. *)
-(* Time Definition foo_l4 : t8M = t8Mb := eq_refl. *)
+(* Goal True. Time let x := constr:(the (t2M = t2Mb) eq_refl) in idtac. Abort. *)
+(* Goal True. Time let x := constr:(the (t4M = t4Mb) eq_refl) in idtac. Abort. *)
+(* Goal True. Time let x := constr:(the (t8M = t8Mb) eq_refl) in idtac. Abort. *)
 
 (* Goal True. idtac "------------- vm_compute". Abort. *)
 (* Goal True. Time let x := eval vm_compute in n5M in idtac. Abort. *)
 (* Goal True. Time let x := eval vm_compute in n10M in idtac. Abort. *)
-(* N.B. This isn't exactly conversion, as we end up fully normalizing n5M three times and n5Mb once *)
-(* Time Definition foo_v0 := eq_refl n5M  <: n5M  = n5Mb. *)
-(* Time Definition foo_v1 := eq_refl n10M <: n10M = n10Mb. *)
+(* (* N.B. This isn't exactly conversion, as we end up fully normalizing n5M three times and n5Mb once *) *)
+(* Goal True. Time let x := constr:(eq_refl n5M  <: n5M  = n5Mb) in idtac. Abort. *)
+(* Goal True. Time let x := constr:(eq_refl n10M  <: n10M  = n10Mb) in idtac. Abort. *)
 (* Goal True. Time let x := eval vm_compute in t2M in idtac. Abort. *)
 (* Goal True. Time let x := eval vm_compute in t4M in idtac. Abort. *)
 (* Goal True. Time let x := eval vm_compute in t8M in idtac. Abort. *)
-(* Time Definition foo_v2 := eq_refl t2M <: t2M = t2Mb. *)
-(* Time Definition foo_v3 := eq_refl t4M <: t4M = t4Mb. *)
-(* Time Definition foo_v4 := eq_refl t8M <: t8M = t8Mb. *)
+(* Goal True. Time let x := constr:(eq_refl t2M <: t2M = t2Mb) in idtac. Abort. *)
+(* Goal True. Time let x := constr:(eq_refl t4M <: t4M = t4Mb) in idtac. Abort. *)
+(* Goal True. Time let x := constr:(eq_refl t8M <: t8M = t8Mb) in idtac. Abort. *)
+
 
 (* Goal True. idtac "------------- native_compute". Abort. *)
 (* Goal True. Time let x := eval native_compute in n5M in idtac. Abort. *)
 (* Goal True. Time let x := eval native_compute in n10M in idtac. Abort. *)
 (* N.B. This isn't exactly conversion, as we end up fully normalizing n5M three times and n5Mb once *)
-(* Time Definition foo_n0 := eq_refl n5M  <<: n5M  = n5Mb. *)
-(* Time Definition foo_n1 := eq_refl n10M <<: n10M = n10Mb. *)
+(* Goal True. Time let x := constr:(eq_refl n5M  <<: n5M  = n5Mb) in idtac. Abort. *)
+(* Goal True. Time let x := constr:(eq_refl n10M  <<: n10M  = n10Mb) in idtac. Abort. *)
 (* Goal True. Time let x := eval native_compute in t2M in idtac. Abort. *)
 (* Goal True. Time let x := eval native_compute in t4M in idtac. Abort. *)
 (* Goal True. Time let x := eval native_compute in t8M in idtac. Abort. *)
-(* Time Definition foo_n2 := eq_refl t2M <<: t2M = t2Mb. *)
-(* Time Definition foo_n3 := eq_refl t4M <<: t4M = t4Mb. *)
-(* Time Definition foo_n4 := eq_refl t8M <<: t8M = t8Mb. *)
+(* Goal True. Time let x := constr:(eq_refl t2M <<: t2M = t2Mb) in idtac. Abort. *)
+(* Goal True. Time let x := constr:(eq_refl t4M <<: t4M = t4Mb) in idtac. Abort. *)
+(* Goal True. Time let x := constr:(eq_refl t8M <<: t8M = t8Mb) in idtac. Abort. *)
 
 (* coqc -impredicative-set Bench.v *)

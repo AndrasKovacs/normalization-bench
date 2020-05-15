@@ -10,6 +10,11 @@ TAGS
 *.vo
 *.aux
 *.glob
+*.vok
+*.vos
+*.cmi
+*.cmx
+*.out
 
 [Dd]ebug/
 [Dd]ebugPublic/

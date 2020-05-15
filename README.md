@@ -46,7 +46,15 @@ __GHC__:
 __Coq__
 - coqc 8.11.1
 - `coqc -impredicative-set`.
-- `ulimit -s unlimited`, timing with `Time` vernacular command.
+- `ulimit -s unlimited`.
+- Runtime options: `export OCAMLRUNPARAM="v=0x400,s=100000000,i=100000000"`.
+- timing with `Time` vernacular command.
+
+__OCaml__
+- ocamlopt 4.10.0+flambda
+- Compile options: `-O3`.
+- `ulimit -s unlimited`.
+- Runtime options: `export OCAMLRUNPARAM="v=0x400,s=100000000,i=100000000"`.
 
 __smalltt__
 - [smalltt 0.2.0.0](https://github.com/AndrasKovacs/smalltt)
@@ -87,18 +95,18 @@ Times in milliseconds. For Coq & smalltt results are from a single run. For ever
 else results are averages of 20 runs.
 
 
-|   | GHC HOAS CBV | GHC HOAS CBN | GHC interp CBV | nodejs HOAS | Scala HOAS | F# HOAS | Coq cbv | Coq lazy | Coq vm_compute | Coq native_compute | smalltt
-|:--|:--------|:-------|:------|:----|:------|:------|:----|:----|:----|:----|:----
-| Nat 5M conversion     | 90  | 112 | 234 | 700  | 376  | 1246     | N/A    | 81349 | 4753  | 7033  | 500
-| Nat 5M normalization  | 101 | 108 | 167 | 976  | 320  | 69592    | 9422   | 3029  | 5550  | 7554  | 411
-| Nat 10M conversion    | 208 | 224 | 695 | 1395 | 1122 | 4462     | N/A    | OOM   | 10404 | 13416 | 1681
-| Nat 10M normalization | 227 | 269 | 439 | 3718 | 4422 | too long | 31962  | 9056  | 14800 | 15029 | 1148
-| Tree 2M conversion    | 136 | 114 | 274 | 396  | 146  | 305      | N/A    | 668   | 561   | 1598  | 425
-| Tree 2M normalization | 86  | 76  | 163 | 323  | 88   | 1514     | 790    | 735   | 907   | 1129  | 346
-| Tree 4M conversion    | 294 | 229 | 588 | 827  | 288  | 630      | N/A    | 1284  | 1276  | 2798  | 1429
-| Tree 4M normalization | 192 | 194 | 343 | 635  | 174  | 3119     | 1450   | 1551  | 1729  | 2301  | 745
-| Tree 8M conversion    | 723 | 457 | 1268| 1726 | 743  | 1232     | N/A    | 2563  | 2420  | 5092  | 2371
-| Tree 8M normalization | 436 | 525 | 716 | 1398 | 750  | 5930     | 2990   | 3358  | 3464  | 3920  | 1544
+|   | GHC HOAS CBV | GHC HOAS CBN | GHC interp CBV | OCaml HOAS | nodejs HOAS | Scala HOAS | F# HOAS | Coq cbv | Coq lazy | Coq vm_compute | Coq native_compute | smalltt
+|:--|:--------|:-------|:------|:----|:------|:------|:----|:----|:----|:----|:----|:----
+| Nat 5M conversion     | 90  | 112 | 234 | 268  | 700  | 376  | 1246     | N/A    | 31663 | 1208  | 3359  | 500
+| Nat 5M normalization  | 101 | 108 | 167 | 131  | 976  | 320  | 69592    | 1507   | 2604  | 4309  | 4790  | 411
+| Nat 10M conversion    | 208 | 224 | 695 | 610  | 1395 | 1122 | 4462     | N/A    | OOM   | 6965  | 5081  | 1681
+| Nat 10M normalization | 227 | 269 | 439 | 965  | 3718 | 4422 | too long | 3340   | 5780  | 11216 | 13181 | 1148
+| Tree 2M conversion    | 136 | 114 | 274 | 117  | 396  | 146  | 305      | N/A    | 477   | 561   | 691   | 425
+| Tree 2M normalization | 86  | 76  | 163 | 244  | 323  | 88   | 1514     | 1248   | 702   | 960   | 1103  | 346
+| Tree 4M conversion    | 294 | 229 | 588 | 150  | 827  | 288  | 630      | N/A    | 646   | 1276  | 1302  | 1429
+| Tree 4M normalization | 192 | 194 | 343 | 534  | 635  | 174  | 3119     | 1365   | 1488  | 1729  | 1983  | 745
+| Tree 8M conversion    | 723 | 457 | 1268| 253  | 1726 | 743  | 1232     | N/A    | 1279  | 2420  | 2901  | 2371
+| Tree 8M normalization | 436 | 525 | 716 | 1298 | 1398 | 750  | 5930     | 3275   | 2871  | 3464  | 3497  | 1544
 
 #### Commentary
 
@@ -117,13 +125,15 @@ __GHC CBV interpreter__ is doing pretty well. It's already at worst half as fast
 as Scala, and there are a number of optimizations still on the table. I'd first try
 to add known call optimization.
 
-__Coq__. The results are rather weird to be honest. Some general comments first:
-we have to use `ulimit` here as well, otherwise `Nat` benchmarks overflow the
-stack. Also, while it is possible to [tune
-GC](https://caml.inria.fr/pub/docs/manual-ocaml/runtime.html), I have found no
-significant improvement from increasing minor/major heap size. It is surprising
-that `vm_compute` and `native_compute` aren't clearly better than `lazy` and
-`cbv`, and `native` is actually all-around worse on the tree benchmarks.
+__OCaml__ HOAS is pretty good, with surprisingly fast tree conversion, although
+worse than GHC elsewhere. The effect of free memory RTS options was huge here: 2-10x
+speedup.
+
+__Coq__. I note that while some benchmarks (e.g. cbv Nat) benefited enormously
+from the free memory for GC, some of them slowed down 10-30%. Overal the free
+memory RTS setting performed better. It's worth noting that native_compute performs
+significantly worse than OCaml HOAS, though the two should be similar; probably
+native_compute does not use flambda optimization options at all.
 
 __smalltt__ is slower than the barebones interpreter, which is as expected,
 because smalltt has an evaluator which does significantly more bookkeeping
@@ -160,7 +170,7 @@ General comments.
 - Add bench figures without free memory options.
 - Add figures for AST interpreters.
 - More benchmarks
-- Add OCaml, Agda, Lean 3/4, [mlang](https://github.com/molikto/mlang).
+- Agda, Lean 3/4, [mlang](https://github.com/molikto/mlang).
 
 #### Preliminary analysis & conclusions
 
