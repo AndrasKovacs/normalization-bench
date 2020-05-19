@@ -167,7 +167,7 @@ General comments.
 
 #### Preliminary analysis & conclusions
 
-Modern JIT platforms don't seem to be good at lambda calculus. From the current
+Modern JIT platforms don't seem to be good enough at lambda calculus. From the current
 benchmarking, JVM seems to be the best choice. However, I haven't yet
 benchmarked call-by-need, which could possibly be a significant performance hit
 on JVM. At the moment it does not seem worth to write high-performance proof
