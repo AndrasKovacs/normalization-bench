@@ -5,6 +5,7 @@
 package normalization_bench
 
 import java.util.concurrent.TimeUnit
+import org.openjdk.jmh.annotations.{Benchmark, BenchmarkMode, Mode, OutputTimeUnit}
 
 abstract class Tm
 case class Var(x: Long) extends Tm
@@ -16,8 +17,33 @@ case class VVar(x: Long) extends Val
 case class VAp(t: Val, u: Val) extends Val
 case class VLam(t: Val => Val) extends Val
 
-
 object Main extends App {
+
+  @OutputTimeUnit(TimeUnit.MILLISECONDS)
+  @BenchmarkMode(Array(Mode.AverageTime))
+  class Bench {
+    @Benchmark
+    def Nat5Mconversion: Boolean = conv0(n5M, n5Mb)
+    @Benchmark
+    def Nat5Mnormalization: Boolean = force(quote0(n5M))
+    @Benchmark
+    def Nat10Mconversion: Boolean = conv0(n10M, n10Mb)
+    @Benchmark
+    def Nat10Mnormalization: Boolean = force(quote0(n10M))
+    @Benchmark
+    def Tree2Mconversion: Boolean = conv0(ap(fullTree, n20), ap(fullTree, n20b))
+    @Benchmark
+    def Tree2Mnormalization: Boolean = force(quote0(ap(fullTree, n20)))
+    @Benchmark
+    def Tree4Mconversion: Boolean = conv0(ap(fullTree, n21), ap(fullTree, n21b))
+    @Benchmark
+    def Tree4Mnormalization: Boolean = force(quote0(ap(fullTree, n21)))
+    @Benchmark
+    def Tree8Mconversion: Boolean = conv0(ap(fullTree, n22), ap(fullTree, n22b))
+    @Benchmark
+    def Tree8Mnormalization: Boolean =  force(quote0(ap(fullTree, n22)))
+  }
+
   def quote(l: Long, v:Val) : Tm = {
     v match {
       case VVar(x)   => Var(l - x - 1)
@@ -127,10 +153,10 @@ object Main extends App {
     println(s"\nAverage time: $avg ms")
   }
 
-  // Timed("Nat 5M conversion"     , 20, () => conv0(n5M, n5Mb))
-  // Timed("Nat 5M normalization"  , 20, () => force(quote0(n5M)))
-  // Timed("Nat 10M conversion"    , 20, () => conv0(n10M, n10Mb))
-  // Timed("Nat 10M normalization" , 20, () => force(quote0(n10M)))
+  Timed("Nat 5M conversion"     , 20, () => conv0(n5M, n5Mb))
+  Timed("Nat 5M normalization"  , 20, () => force(quote0(n5M)))
+  Timed("Nat 10M conversion"    , 20, () => conv0(n10M, n10Mb))
+  Timed("Nat 10M normalization" , 20, () => force(quote0(n10M)))
   Timed("Tree 2M conversion"    , 20, () => conv0(ap(fullTree, n20), ap(fullTree, n20b)))
   Timed("Tree 2M normalization" , 20, () => force(quote0(ap(fullTree, n20))))
   Timed("Tree 4M conversion"    , 20, () => conv0(ap(fullTree, n21), ap(fullTree, n21b)))
