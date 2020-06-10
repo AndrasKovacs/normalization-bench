@@ -89,16 +89,16 @@ else results are averages of 20 runs.
 
 |   | GHC HOAS CBV | GHC HOAS CBN | GHC interp CBV | OCaml HOAS | nodejs HOAS | Scala HOAS | F# HOAS | Coq cbv | Coq lazy | Coq vm_compute | Coq native_compute | smalltt
 |:--|:--------|:-------|:------|:----|:------|:------|:----|:----|:----|:----|:----|:----
-| Nat 5M conversion     | 90  | 112 | 234 | 268  | 700  | 376  | 1246     | N/A    | 31663 | 1208  | 3359  | 500
-| Nat 5M normalization  | 101 | 108 | 167 | 131  | 976  | 320  | 69592    | 1507   | 2604  | 4309  | 4790  | 411
-| Nat 10M conversion    | 208 | 224 | 695 | 610  | 1395 | 1122 | 4462     | N/A    | OOM   | 6965  | 5081  | 1681
-| Nat 10M normalization | 227 | 269 | 439 | 965  | 3718 | 4422 | too long | 3340   | 5780  | 11216 | 13181 | 1148
-| Tree 2M conversion    | 136 | 114 | 274 | 117  | 396  | 146  | 305      | N/A    | 477   | 561   | 691   | 425
-| Tree 2M normalization | 86  | 76  | 163 | 244  | 323  | 88   | 1514     | 1248   | 702   | 960   | 1103  | 346
-| Tree 4M conversion    | 294 | 229 | 588 | 150  | 827  | 288  | 630      | N/A    | 646   | 1276  | 1302  | 1429
-| Tree 4M normalization | 192 | 194 | 343 | 534  | 635  | 174  | 3119     | 1365   | 1488  | 1729  | 1983  | 745
-| Tree 8M conversion    | 723 | 457 | 1268| 253  | 1726 | 743  | 1232     | N/A    | 1279  | 2420  | 2901  | 2371
-| Tree 8M normalization | 436 | 525 | 716 | 1298 | 1398 | 750  | 5930     | 3275   | 2871  | 3464  | 3497  | 1544
+| Nat 5M conversion     | 90  | 112 | 234 | 268  | 700  | 138  | 1246     | N/A    | 31663 | 1208  | 3359  | 500
+| Nat 5M normalization  | 101 | 108 | 167 | 131  | 976  | 374  | 69592    | 1507   | 2604  | 4309  | 4790  | 411
+| Nat 10M conversion    | 208 | 224 | 695 | 610  | 1395 | 960  | 4462     | N/A    | OOM   | 6965  | 5081  | 1681
+| Nat 10M normalization | 227 | 269 | 439 | 965  | 3718 | 3908 | too long | 3340   | 5780  | 11216 | 13181 | 1148
+| Tree 2M conversion    | 136 | 114 | 274 | 117  | 396  | 118  | 305      | N/A    | 477   | 561   | 691   | 425
+| Tree 2M normalization | 86  | 76  | 163 | 244  | 323  | 85   | 1514     | 1248   | 702   | 960   | 1103  | 346
+| Tree 4M conversion    | 294 | 229 | 588 | 150  | 827  | 271  | 630      | N/A    | 646   | 1276  | 1302  | 1429
+| Tree 4M normalization | 192 | 194 | 343 | 534  | 635  | 181  | 3119     | 1365   | 1488  | 1729  | 1983  | 745
+| Tree 8M conversion    | 723 | 457 | 1268| 253  | 1726 | 625  | 1232     | N/A    | 1279  | 2420  | 2901  | 2371
+| Tree 8M normalization | 436 | 525 | 716 | 1298 | 1398 | 731  | 5930     | 3275   | 2871  | 3464  | 3497  | 1544
 
 #### Commentary
 
@@ -145,7 +145,7 @@ General comments.
   solutions & smalltt had 3-6 times speedup from `-A1G`. Scala and nodejs
   performance becomes dismal without free RAM; I plan to put these numbers up
   here as well. I suspect that F# is crippled by the same issues, but I was not
-  able to use options to throw more memory at it. 
+  able to use options to throw more memory at it.
 - Startup time in nodejs is excellent, but F# and Scala are rather sluggish. GC
   pause variance is way more in the non-GHC solutions, with occasional
   multi-second pauses in nodejs and Scala.
