@@ -16,32 +16,28 @@ dependencies:
   - ghc-prim
   - primitive
   - time
+  - gauge
+
+ghc-options:
+  - -Wall
+  - -Wno-missing-signatures
+  - -Wno-name-shadowing
+  - -Wno-unused-do-bind
+  - -Wno-unused-matches
+  - -Wno-partial-type-signatures
+  - -O2
+  - -fllvm
+  - -rtsopts
+  # - -ddump-simpl
+  # - -ddump-to-file
+  # - -dsuppress-all
+  # - -dno-suppress-type-signatures
 
 library:
   source-dirs:
     - .
-  ghc-options:
-    - -Wall
-    - -Wno-missing-signatures
-    - -Wno-name-shadowing
-    - -Wno-unused-do-bind
-    - -Wno-unused-matches
-    - -Wno-partial-type-signatures
-    - -O2
-    - -fllvm
-
 executables:
   normalization-bench:
     main:  Main.hs
-    ghc-options:
-      - -Wall
-      - -Wno-missing-signatures
-      - -Wno-name-shadowing
-      - -Wno-unused-do-bind
-      - -Wno-unused-matches
-      - -Wno-partial-type-signatures
-      - -O2
-      - -fllvm
-      - -rtsopts
     dependencies:
     - normalization-bench
