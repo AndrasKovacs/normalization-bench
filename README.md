@@ -23,9 +23,10 @@ __Test computer__:
 - 8GB RAM
 
 __Scala__:
-- sbt 1.3.4
+- sbt 1.4.9
 - openjdk 1.8.0_232
 - Runtime options: `export SBT_OPTS="-Xss1000M -Xmx4G"`
+- alternatively: graalvm 21.0.0.2, with the same runtime options
 
 __nodejs__:
 - node v13.6.0
@@ -90,18 +91,18 @@ Times in milliseconds. For Coq & smalltt results are from a single run. For ever
 else results are averages of 20 runs.
 
 
-|   | GHC HOAS CBV | GHC HOAS CBN | GHC interp CBV | OCaml HOAS | nodejs HOAS | Scala HOAS | F# HOAS | Coq cbv | Coq lazy | Coq vm_compute | Coq native_compute | smalltt | luajit
-|:--|:--------|:-------|:------|:----|:------|:------|:----|:----|:----|:----|:----|:----|:----
-| Nat 5M conversion     | 90  | 112 | 234 | 268  | 700  | 138  | 1246     | N/A    | 31663 | 1208  | 3359  | 500  | stack overflow
-| Nat 5M normalization  | 101 | 108 | 167 | 131  | 976  | 374  | 69592    | 1507   | 2604  | 4309  | 4790  | 411  | stack overflow
-| Nat 10M conversion    | 208 | 224 | 695 | 610  | 1395 | 960  | 4462     | N/A    | OOM   | 6965  | 5081  | 1681 | stack overflow
-| Nat 10M normalization | 227 | 269 | 439 | 965  | 3718 | 3908 | too long | 3340   | 5780  | 11216 | 13181 | 1148 | stack overflow
-| Tree 2M conversion    | 136 | 114 | 274 | 117  | 396  | 118  | 305      | N/A    | 477   | 561   | 691   | 425  | 3576
-| Tree 2M normalization | 86  | 76  | 163 | 244  | 323  | 85   | 1514     | 1248   | 702   | 960   | 1103  | 346  | 2533
-| Tree 4M conversion    | 294 | 229 | 588 | 150  | 827  | 271  | 630      | N/A    | 646   | 1276  | 1302  | 1429 | OOM
-| Tree 4M normalization | 192 | 194 | 343 | 534  | 635  | 181  | 3119     | 1365   | 1488  | 1729  | 1983  | 745  | OOM
-| Tree 8M conversion    | 723 | 457 | 1268| 253  | 1726 | 625  | 1232     | N/A    | 1279  | 2420  | 2901  | 2371 | OOM
-| Tree 8M normalization | 436 | 525 | 716 | 1298 | 1398 | 731  | 5930     | 3275   | 2871  | 3464  | 3497  | 1544 | OOM
+|   | GHC HOAS CBV | GHC HOAS CBN | GHC interp CBV | OCaml HOAS | nodejs HOAS | Scala HOAS | Scala HOAS graalvm | F# HOAS | Coq cbv | Coq lazy | Coq vm_compute | Coq native_compute | smalltt | luajit
+|:--|:--------|:-------|:------|:----|:------|:------|:----|:----|:----|:----|:----|:----|:----|:---
+| Nat 5M conversion     | 90  | 112 | 234 | 268  | 700  | 138  | 1013 | 1246     | N/A    | 31663 | 1208  | 3359  | 500  | stack overflow
+| Nat 5M normalization  | 101 | 108 | 167 | 131  | 976  | 374  | 2031 | 69592    | 1507   | 2604  | 4309  | 4790  | 411  | stack overflow
+| Nat 10M conversion    | 208 | 224 | 695 | 610  | 1395 | 960  | 2145 | 4462     | N/A    | OOM   | 6965  | 5081  | 1681 | stack overflow
+| Nat 10M normalization | 227 | 269 | 439 | 965  | 3718 | 3908 | 5833 | too long | 3340   | 5780  | 11216 | 13181 | 1148 | stack overflow
+| Tree 2M conversion    | 136 | 114 | 274 | 117  | 396  | 118  | 137  | 305      | N/A    | 477   | 561   | 691   | 425  | 3576
+| Tree 2M normalization | 86  | 76  | 163 | 244  | 323  | 85   | 84   | 1514     | 1248   | 702   | 960   | 1103  | 346  | 2533
+| Tree 4M conversion    | 294 | 229 | 588 | 150  | 827  | 271  | 250  | 630      | N/A    | 646   | 1276  | 1302  | 1429 | OOM
+| Tree 4M normalization | 192 | 194 | 343 | 534  | 635  | 181  | 164  | 3119     | 1365   | 1488  | 1729  | 1983  | 745  | OOM
+| Tree 8M conversion    | 723 | 457 | 1268| 253  | 1726 | 625  | 516  | 1232     | N/A    | 1279  | 2420  | 2901  | 2371 | OOM
+| Tree 8M normalization | 436 | 525 | 716 | 1298 | 1398 | 731  | 332  | 5930     | 3275   | 2871  | 3464  | 3497  | 1544 | OOM
 
 #### Commentary
 
@@ -114,7 +115,10 @@ pleasant, and definitely vastly better than Java or even Clojure. That said,
 performance seems good for trees but degrades sharply from 5M to 10M with natural
 numbers; perhaps there is some issue with deep stacks.
 
-__nodejs__. Also pretty disappointing all around, although better than F#.
+__GraalVM__ Scala had excellent performance with trees, but there was a serious
+slowdown with natural numbers, indicating some issue with deep stacks.
+
+__nodejs__. Somewhat disappointing all around, although better than F#.
 
 __GHC CBV interpreter__ is doing pretty well. It's already at worst half as fast
 as Scala, and there are a number of optimizations still on the table. I'd first try

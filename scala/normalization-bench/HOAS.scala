@@ -1,6 +1,9 @@
 
 // before running:
-// export SBT_OPTS="-Xss1000M -Xmx4G"
+//   export SBT_OPTS="-Xss1000M -Xmx4G"
+// if using graalvm start sbt as:
+//   sbt -java-home <graalvm directory>
+
 
 package normalization_bench
 
